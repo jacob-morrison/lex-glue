@@ -33,7 +33,17 @@ BATCH_SIZE=8
 ACCUMULATION_STEPS=1
 TASK='eurlex'
 
-CUDA_VISIBLE_DEVICES=${GPU_NUMBER} python experiments/eurlex.py --model_name_or_path ${MODEL_NAME} --do_lower_case ${LOWER_CASE}  --output_dir logs/${TASK}/${MODEL_NAME}/seed_1 --do_train --do_eval --do_pred --overwrite_output_dir --load_best_model_at_end --metric_for_best_model micro-f1 --greater_is_better True --evaluation_strategy epoch --save_strategy epoch --save_total_limit 5 --num_train_epochs 2 --learning_rate 3e-5 --per_device_train_batch_size ${BATCH_SIZE} --per_device_eval_batch_size ${BATCH_SIZE} --seed 1 --fp16 --fp16_full_eval --gradient_accumulation_steps ${ACCUMULATION_STEPS} --eval_accumulation_steps ${ACCUMULATION_STEPS}
+gantry run --beaker-image 'ai2/pytorch1.13.0-cuda11.6-python3.9' \
+--workspace ai2/robustness-interpolations --cluster ai2/allennlp-cirrascale \
+--pip requirements.txt --gpus 1 --priority high \
+-- python -u experiments/eurlex.py --model_name_or_path ${MODEL_NAME} \
+--do_lower_case True  --output_dir logs/eurlex/${MODEL_NAME}/seed_1 \
+--do_train --do_eval --do_pred --overwrite_output_dir --load_best_model_at_end \
+--metric_for_best_model micro-f1 --greater_is_better True --evaluation_strategy \
+epoch --save_strategy epoch --save_total_limit 5 --num_train_epochs 2 --learning_rate \
+3e-5 --per_device_train_batch_size 8 --per_device_eval_batch_size 8 \
+--seed 1 --fp16 --fp16_full_eval --gradient_accumulation_steps 1 \
+--eval_accumulation_steps 1
 
 # ledgar
 GPU_NUMBER=0
