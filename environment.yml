@@ -2,7 +2,7 @@ name: torch-env
 channels:
 - pytorch
 dependencies:
-- torch
+- pytorch
 - transformers>=4.9.0
 - scikit-learn>=0.24.1
 - tqdm>=4.61.1
