@@ -28,6 +28,7 @@ from transformers import EarlyStoppingCallback
 from casehold_helpers import MultipleChoiceDataset, Split
 from sklearn.metrics import f1_score
 from models.deberta import DebertaForMultipleChoice
+from peft import PeftModel, PeftConfig, get_peft_config, get_peft_model, LoraConfig, TaskType
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,12 @@ class ModelArguments:
 	model_name_or_path: str = field(
 		metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
 	)
+    use_lora: Optional[bool] = field(
+        default=False, metadata={"help": "Whether to use LoRA or not"}
+    )
+    lora_rank: Optional[int] = field(
+        default=None, metadata={"help": "If using LoRA, what rank to use"}
+    )
 	config_name: Optional[str] = field(
 		default=None, metadata={"help": "Pretrained config name or path if not the same as model_name"}
 	)
@@ -179,6 +186,12 @@ def main():
 			config=config,
 			cache_dir=model_args.cache_dir,
 		)
+
+    if model_args.use_lora:
+        peft_config = LoraConfig(
+            task_type=TaskType.SEQ_CLS, inference_mode=False, r=model_args.lora_rank, lora_alpha=32, lora_dropout=0.1
+        )
+        model = get_peft_model(model, peft_config)
 
 	train_dataset = None
 	eval_dataset = None

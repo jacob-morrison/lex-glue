@@ -33,6 +33,7 @@ from transformers import (
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
+from peft import PeftModel, PeftConfig, get_peft_config, get_peft_model, LoraConfig, TaskType
 
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
@@ -103,6 +104,12 @@ class ModelArguments:
 
     model_name_or_path: str = field(
         default=None, metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
+    )
+    use_lora: Optional[bool] = field(
+        default=False, metadata={"help": "Whether to use LoRA or not"}
+    )
+    lora_rank: Optional[int] = field(
+        default=None, metadata={"help": "If using LoRA, what rank to use"}
     )
     config_name: Optional[str] = field(
         default=None, metadata={"help": "Pretrained config name or path if not the same as model_name"}
@@ -245,6 +252,12 @@ def main():
         revision=model_args.model_revision,
         use_auth_token=True if model_args.use_auth_token else None,
     )
+
+    if model_args.use_lora:
+        peft_config = LoraConfig(
+            task_type=TaskType.SEQ_CLS, inference_mode=False, r=model_args.lora_rank, lora_alpha=32, lora_dropout=0.1
+        )
+        model = get_peft_model(model, peft_config)
 
     # Preprocessing the datasets
     # Padding strategy
