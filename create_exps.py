@@ -7,12 +7,9 @@ import time
 
 today = date.today().strftime("%m%d%Y")
 
-with open("beaker_configs/default_experiment.yaml", 'r') as f:
-    default_yaml = f.read()
-d1 = yaml.load(default_yaml, Loader=yaml.FullLoader)
-
-# cluster = "ai2/allennlp-cirrascale"
-cluster = "ai2/allennlp-elanding-a100-40g"
+# with open("beaker_configs/default_experiment.yaml", 'r') as f:
+#     default_yaml = f.read()
+# d1 = yaml.load(default_yaml, Loader=yaml.FullLoader)
 
 def set_argument_value(arguments, name, value):
     if name not in arguments:
@@ -32,7 +29,7 @@ def set_argument_value(arguments, name, value):
 # experiment_group = "train_full_squad"
 # experiment_group = "train_and_eval_actually_only_qa"
 # # experiment_group = "train_qa_training_curves"
-experiment_group = "retrain_tk_or_full_squad_training_curves"
+experiment_group = "none"
 # experiment_group = "train_full_nli"
 # experiment_group = "train_full_squad_lora"
 # experiment_group = "train_full_nli_lora"
@@ -60,6 +57,90 @@ encodings = {
     # "instruct_pos_2_neg_2_explanation_input": {"add_task_name": False, "add_task_definition": True, "num_pos_examples": 2, "num_neg_examples": 2, "add_explanation": True},
     # "tk_instruct": {"add_task_name": False, "add_task_definition": False, "num_pos_examples": 0, "num_neg_examples": 0, "add_explanation": False, "tk_instruct": True},
 }
+
+# ---- run all experiments ---- #
+experiments = [
+    # 'case-hold',
+    # 'eurlex',
+    # 'ledgar',
+    'unfair-tos',
+]
+
+models = [
+    'bert-base-uncased',
+    # 'bert-large-uncased',
+    'roberta-base',
+    # 'roberta-large',
+    'microsoft/deberta-v2-xlarge',
+    # 'microsoft/deberta-v2-xxlarge',
+    'microsoft/deberta-v3-xsmall',
+    # 'microsoft/deberta-v3-small',
+    # 'microsoft/deberta-v3-base',
+    # 'microsoft/deberta-v3-large',
+    'gpt2',
+    # 'gpt2-medium',
+    # 'gpt2-large',
+    # 'gpt2-xl',
+]
+
+methods = [
+    'full_finetuning',
+    'lora_2', # add more loras
+]
+
+seeds = [
+    # 1,
+    2,
+    # 3,
+    # 4,
+    # 5,
+]
+
+for experiment in experiments:
+    with open('configs/base-config-' + experiment + '.yaml', 'r') as f:
+        default_yaml = f.read()
+    d1 = yaml.load(default_yaml, Loader=yaml.FullLoader)
+
+    for seed in seeds:
+        for model in models:
+            for method in methods:
+                d = copy.deepcopy(d1)
+                for i in range(len(d['tasks'][0]['arguments'])):
+                    if '$MODEL' in d['tasks'][0]['arguments'][i]:
+                        d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$MODEL', model)
+                    if '$METHOD' in d['tasks'][0]['arguments'][i]:
+                        d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$METHOD', method)
+                    if '$SEED' in d['tasks'][0]['arguments'][i]:
+                        d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$SEED', str(seed))
+                    if '$LOWER' in d['tasks'][0]['arguments'][i]:
+                        d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LOWER', 'True' if 'uncased' in model else 'False')
+                    if '$USE_LORA' in d['tasks'][0]['arguments'][i]:
+                        if 'lora' in method:
+                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$USE_LORA', 'True')
+                        else:
+                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$USE_LORA', 'False')
+                    if '$LORA_RANK' in d['tasks'][0]['arguments'][i]:
+                        if 'lora' in method:
+                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LORA_RANK', method.split('-')[-1])
+                        else:
+                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LORA_RANK', '0')
+
+                model_for_name = model.replace('/', '-')
+                name = f'{experiment}-{model_for_name}-{method}-seed_{seed}'
+
+                d['description'] = name
+                d['tasks'][0]['name'] = name
+
+                print(d)
+
+                fn = "configs/{}.yaml".format(name)
+                file = open(fn, "w")
+                yaml.dump(d, file, default_flow_style=True)
+                file.close()
+
+                cmd = "beaker experiment create {} --workspace ai2/lexglue-tasks".format(fn)
+                subprocess.Popen(cmd, shell=True)
+                time.sleep(3)
 
 #--------------- experiments about number of supervision tasks -------------------------
 
