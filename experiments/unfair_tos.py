@@ -241,6 +241,8 @@ def main():
         config.attention_window = [128] * config.num_hidden_layers
 
     if model_args.use_lora:
+        print('Using LoRA')
+        print('LoRA Rank: ' + str(model_args.lora_rank))
         config = PeftConfig.from_pretrained(model_args.model_name_or_path)
         model = AutoModelForSequenceClassification.from_pretrained(
             model_args.model_name_or_path,
