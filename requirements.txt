@@ -17,3 +17,4 @@ nltk>=3.5
 scipy>=1.6.3
 sentencepiece
 peft
+protobuf
