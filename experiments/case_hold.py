@@ -43,10 +43,10 @@ class ModelArguments:
 	model_name_or_path: str = field(
 		metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
 	)
-    use_lora: Optional[bool] = field(
+	use_lora: Optional[bool] = field(
         default=False, metadata={"help": "Whether to use LoRA or not"}
     )
-    lora_rank: Optional[int] = field(
+	lora_rank: Optional[int] = field(
         default=None, metadata={"help": "If using LoRA, what rank to use"}
     )
 	config_name: Optional[str] = field(
@@ -187,11 +187,11 @@ def main():
 			cache_dir=model_args.cache_dir,
 		)
 
-    if model_args.use_lora:
-        peft_config = LoraConfig(
+	if model_args.use_lora:
+		peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS, inference_mode=False, r=model_args.lora_rank, lora_alpha=32, lora_dropout=0.1
         )
-        model = get_peft_model(model, peft_config)
+		model = get_peft_model(model, peft_config)
 
 	train_dataset = None
 	eval_dataset = None

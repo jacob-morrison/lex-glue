@@ -292,7 +292,7 @@ def main():
 
     if model_args.hierarchical:
         # Hack the classifier encoder to use hierarchical BERT
-        if config.model_type in ['bert', 'deberta']:
+        if config.model_type in ['bert', 'deberta', 'deberta-v2']:
             if config.model_type == 'bert':
                 segment_encoder = model.bert
             else:
