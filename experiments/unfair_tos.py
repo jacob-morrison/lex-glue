@@ -262,6 +262,7 @@ def main():
             task_type=TaskType.SEQ_CLS, inference_mode=False, r=model_args.lora_rank, lora_alpha=32, lora_dropout=0.1
         )
         model = get_peft_model(model, peft_config)
+        model.print_trainable_parameters()
 
     # Preprocessing the datasets
     # Padding strategy
