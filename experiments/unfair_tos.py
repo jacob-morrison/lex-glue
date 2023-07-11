@@ -240,49 +240,29 @@ def main():
     if config.model_type == 'longformer':
         config.attention_window = [128] * config.num_hidden_layers
 
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_args.tokenizer_name if model_args.tokenizer_name else model_args.model_name_or_path,
+        do_lower_case=model_args.do_lower_case,
+        cache_dir=model_args.cache_dir,
+        use_fast=model_args.use_fast_tokenizer,
+        revision=model_args.model_revision,
+        use_auth_token=True if model_args.use_auth_token else None,
+    )
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_args.model_name_or_path,
+        from_tf=bool(".ckpt" in model_args.model_name_or_path),
+        config=config,
+        cache_dir=model_args.cache_dir,
+        revision=model_args.model_revision,
+        use_auth_token=True if model_args.use_auth_token else None,
+    )
+
     if model_args.use_lora:
-        print('Using LoRA')
-        print('LoRA Rank: ' + str(model_args.lora_rank))
-        config = PeftConfig.from_pretrained(model_args.model_name_or_path)
-        model = AutoModelForSequenceClassification.from_pretrained(
-            model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
-            config=config,
-            cache_dir=model_args.cache_dir,
-            revision=model_args.model_revision,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
-        model = PeftModel.from_pretrained(model, model_args.model_name_or_path)
-        tokenizer = AutoTokenizer.from_pretrained(
-            config.base_model_name_or_path,
-            do_lower_case=model_args.do_lower_case,
-            cache_dir=model_args.cache_dir,
-            use_fast=model_args.use_fast_tokenizer,
-            revision=model_args.model_revision,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS, inference_mode=False, r=model_args.lora_rank, lora_alpha=32, lora_dropout=0.1
         )
         model = get_peft_model(model, peft_config)
 
-    else:
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_args.tokenizer_name if model_args.tokenizer_name else model_args.model_name_or_path,
-            do_lower_case=model_args.do_lower_case,
-            cache_dir=model_args.cache_dir,
-            use_fast=model_args.use_fast_tokenizer,
-            revision=model_args.model_revision,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
-        model = AutoModelForSequenceClassification.from_pretrained(
-            model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
-            config=config,
-            cache_dir=model_args.cache_dir,
-            revision=model_args.model_revision,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
     # Preprocessing the datasets
     # Padding strategy
     if data_args.pad_to_max_length:
