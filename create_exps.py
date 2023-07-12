@@ -67,8 +67,8 @@ experiments = [
 ]
 
 models = [
-    # 'bert-base-uncased',
-    # 'bert-large-uncased',
+    'bert-base-uncased',
+    'bert-large-uncased',
     'roberta-base',
     'roberta-large',
     'microsoft/deberta-v2-xlarge',
@@ -101,8 +101,8 @@ seeds = [
     1,
     2,
     3,
-    4,
-    5,
+    # 4,
+    # 5,
 ]
 
 for experiment in experiments:
