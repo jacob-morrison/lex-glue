@@ -12,7 +12,7 @@
           source: {beaker: 01H52WTV54F58M4163MQZX92XW}}, {mountPath: /net/nfs.cirrascale,
           source: {hostPath: /net/nfs.cirrascale}}], envVars: [{name: GANTRY_VERSION,
           value: 0.17.0}, {name: GITHUB_REPO, value: jacob-morrison/lex-glue}, {name: GIT_REF,
-          value: 2271c2c6a6bd68fb72cb3e551dae90d91de750df}, {name: PYTHON_VERSION,
+          value: 3ab925bbd9298e6c3da36671a8e410dee6433adf}, {name: PYTHON_VERSION,
           value: '3.9'}, {name: PIP_REQUIREMENTS_FILE, value: requirements.txt}],
       image: {beaker: ai2/pytorch1.13.0-cuda11.6-python3.9}, name: unfair-tos-huggyllama-llama-7b-lora_2-seed_2,
       resources: {gpuCount: 1}, result: {path: /results}}], version: v2}

@@ -249,7 +249,7 @@ def main():
         use_auth_token=True if model_args.use_auth_token else None,
     )
     if 'gpt2' in model_args.model_name_or_path or 'llama' in model_args.model_name_or_path:
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+        tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
 
     model = AutoModelForSequenceClassification.from_pretrained(
         model_args.model_name_or_path,
