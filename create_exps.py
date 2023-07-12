@@ -4,6 +4,7 @@ import yaml
 import random
 from datetime import date
 import time
+import os
 
 today = date.today().strftime("%m%d%Y")
 
@@ -60,10 +61,10 @@ encodings = {
 
 # ---- run all experiments ---- #
 experiments = [
-    'case-hold',
-    'eurlex',
-    'ledgar',
     'unfair-tos',
+    'eurlex',
+    # 'case-hold',
+    # 'ledgar',
 ]
 
 models = [
@@ -78,19 +79,22 @@ models = [
     'microsoft/deberta-v3-base',
     'microsoft/deberta-v3-large',
     'gpt2',
+    'gpt2-medium',
+    'gpt2-large',
+    'gpt2-xl',
     'huggyllama/llama-7b',
     'huggyllama/llama-13b',
 ]
 
 methods = [
     'full_finetuning',
-    # 'lora_1',
+    'lora_1',
     'lora_2',
     'lora_4',
     'lora_8',
-    # 'lora_16',
-    # 'lora_32',
-    # 'lora_64',
+    'lora_16',
+    'lora_32',
+    'lora_64',
     # 'lora_128',
     # 'lora_256',
     # 'lora_512',
@@ -113,6 +117,8 @@ for experiment in experiments:
     for seed in seeds:
         for model in models:
             for method in methods:
+                if 'llama' in model and method == 'full_finetuning':
+                    continue
                 d = copy.deepcopy(d1)
                 for i in range(len(d['tasks'][0]['arguments'])):
                     if '$MODEL' in d['tasks'][0]['arguments'][i]:
@@ -153,6 +159,8 @@ for experiment in experiments:
                 cmd = "beaker experiment create {} --workspace ai2/lexglue-tasks".format(fn)
                 subprocess.Popen(cmd, shell=True)
                 time.sleep(3)
+
+                os.remove(fn)
 
 #--------------- experiments about number of supervision tasks -------------------------
 
