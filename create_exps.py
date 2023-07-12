@@ -60,36 +60,36 @@ encodings = {
 
 # ---- run all experiments ---- #
 experiments = [
-    # 'case-hold',
-    # 'eurlex',
-    # 'ledgar',
+    'case-hold',
+    'eurlex',
+    'ledgar',
     'unfair-tos',
 ]
 
 models = [
-    # 'bert-base-uncased',
-    # 'bert-large-uncased',
-    # 'roberta-base',
-    # 'roberta-large',
-    # 'microsoft/deberta-v2-xlarge',
-    # 'microsoft/deberta-v2-xxlarge',
-    # 'microsoft/deberta-v3-xsmall',
-    # 'microsoft/deberta-v3-small',
-    # 'microsoft/deberta-v3-base',
-    # 'microsoft/deberta-v3-large',
-    # '/llama-7b',
+    'bert-base-uncased',
+    'bert-large-uncased',
+    'roberta-base',
+    'roberta-large',
+    'microsoft/deberta-v2-xlarge',
+    'microsoft/deberta-v2-xxlarge',
+    'microsoft/deberta-v3-xsmall',
+    'microsoft/deberta-v3-small',
+    'microsoft/deberta-v3-base',
+    'microsoft/deberta-v3-large',
     'gpt2',
     'huggyllama/llama-7b',
+    'huggyllama/llama-13b',
 ]
 
 methods = [
     'full_finetuning',
-    # 'lora_1',
-    'lora_2', # add more loras
-    # 'lora_4',
-    # 'lora_8',
-    # 'lora_16',
-    # 'lora_32',
+    'lora_1',
+    'lora_2',
+    'lora_4',
+    'lora_8',
+    'lora_16',
+    'lora_32',
     # 'lora_64',
     # 'lora_128',
     # 'lora_256',
@@ -98,11 +98,11 @@ methods = [
 ]
 
 seeds = [
-    # 1,
+    1,
     2,
-    # 3,
-    # 4,
-    # 5,
+    3,
+    4,
+    5,
 ]
 
 for experiment in experiments:

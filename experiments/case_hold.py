@@ -171,8 +171,10 @@ def main():
 		# Default fast tokenizer is buggy on CaseHOLD task, switch to legacy tokenizer
 		use_fast=True,
 	)
-	if 'gpt2' in model_args.model_name_or_path or 'llama' in model_args.model_name_or_path:
-		tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    if 'gpt2' in model_args.model_name_or_path or 'llama' in model_args.model_name_or_path:
+        tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
+        if 'gpt2' in model_args.model_name_or_path:
+            config.pad_token_id = config.eos_token_id
 
 	if config.model_type != 'deberta':
 		model = AutoModelForMultipleChoice.from_pretrained(
