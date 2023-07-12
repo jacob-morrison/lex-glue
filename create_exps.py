@@ -67,25 +67,34 @@ experiments = [
 ]
 
 models = [
-    'bert-base-uncased',
+    # 'bert-base-uncased',
     # 'bert-large-uncased',
-    'roberta-base',
+    # 'roberta-base',
     # 'roberta-large',
-    'microsoft/deberta-v2-xlarge',
+    # 'microsoft/deberta-v2-xlarge',
     # 'microsoft/deberta-v2-xxlarge',
-    'microsoft/deberta-v3-xsmall',
+    # 'microsoft/deberta-v3-xsmall',
     # 'microsoft/deberta-v3-small',
     # 'microsoft/deberta-v3-base',
     # 'microsoft/deberta-v3-large',
+    # '/llama-7b',
     'gpt2',
-    # 'gpt2-medium',
-    # 'gpt2-large',
-    # 'gpt2-xl',
+    'huggyllama/llama-7b',
 ]
 
 methods = [
     'full_finetuning',
+    # 'lora_1',
     'lora_2', # add more loras
+    # 'lora_4',
+    # 'lora_8',
+    # 'lora_16',
+    # 'lora_32',
+    # 'lora_64',
+    # 'lora_128',
+    # 'lora_256',
+    # 'lora_512',
+    # 'lora_1024',
 ]
 
 seeds = [
@@ -121,9 +130,12 @@ for experiment in experiments:
                             d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$USE_LORA', 'False')
                     if '$LORA_RANK' in d['tasks'][0]['arguments'][i]:
                         if 'lora' in method:
-                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LORA_RANK', method.split('-')[-1])
+                            d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LORA_RANK', method.split('_')[-1])
                         else:
                             d['tasks'][0]['arguments'][i] = d['tasks'][0]['arguments'][i].replace('$LORA_RANK', '0')
+
+                if model == '/llama-7b':
+                    d['tasks'][0]['datasets'].append({"mountPath": "/llama-7b/", "source": {"beaker": '01GYJG4WEQFNZ5SA2YCATZY5EY'}})            
 
                 model_for_name = model.replace('/', '-')
                 name = f'{experiment}-{model_for_name}-{method}-seed_{seed}'

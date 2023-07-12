@@ -1,0 +1,18 @@
+{description: unfair-tos-decapoda-research-llama-7b-hf-full_finetuning-seed_2, tasks: [
+    {arguments: [python, -u, experiments/unfair_tos.py, --model_name_or_path, decapoda-research/llama-7b-hf,
+        --do_lower_case, 'False', --output_dir, /net/nfs.cirrascale/allennlp/jacobm/lexglue/unfair_tos/decapoda-research/llama-7b-hf/full_finetuning/seed_2,
+        --use_lora, 'False', --lora_rank, '0', --do_train, --do_eval, --do_pred, --overwrite_output_dir,
+        --load_best_model_at_end, --metric_for_best_model, micro-f1, --greater_is_better,
+        'True', --evaluation_strategy, epoch, --save_strategy, epoch, --save_total_limit,
+        '5', --num_train_epochs, '20', --learning_rate, 3e-5, --per_device_train_batch_size,
+        '8', --per_device_eval_batch_size, '8', --seed, '2', --fp16, --fp16_full_eval,
+        --gradient_accumulation_steps, '1', --eval_accumulation_steps, '1'], command: [
+        bash, /gantry/entrypoint.sh], constraints: {cluster: [ai2/general-cirrascale,
+          ai2/allennlp-cirrascale]}, context: {priority: high}, datasets: [{mountPath: /gantry,
+          source: {beaker: 01H52WTV54F58M4163MQZX92XW}}, {mountPath: /net/nfs.cirrascale,
+          source: {hostPath: /net/nfs.cirrascale}}], envVars: [{name: GANTRY_VERSION,
+          value: 0.17.0}, {name: GITHUB_REPO, value: jacob-morrison/lex-glue}, {name: GIT_REF,
+          value: 2271c2c6a6bd68fb72cb3e551dae90d91de750df}, {name: PYTHON_VERSION,
+          value: '3.9'}, {name: PIP_REQUIREMENTS_FILE, value: requirements.txt}],
+      image: {beaker: ai2/pytorch1.13.0-cuda11.6-python3.9}, name: unfair-tos-decapoda-research-llama-7b-hf-full_finetuning-seed_2,
+      resources: {gpuCount: 1}, result: {path: /results}}], version: v2}

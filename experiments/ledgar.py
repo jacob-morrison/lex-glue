@@ -244,6 +244,9 @@ def main():
         revision=model_args.model_revision,
         use_auth_token=True if model_args.use_auth_token else None,
     )
+    if 'gpt2' in model_args.model_name_or_path or 'llama' in model_args.model_name_or_path:
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+
     model = AutoModelForSequenceClassification.from_pretrained(
         model_args.model_name_or_path,
         from_tf=bool(".ckpt" in model_args.model_name_or_path),
