@@ -67,8 +67,8 @@ experiments = [
 ]
 
 models = [
-    'bert-base-uncased',
-    'bert-large-uncased',
+    # 'bert-base-uncased',
+    # 'bert-large-uncased',
     'roberta-base',
     'roberta-large',
     'microsoft/deberta-v2-xlarge',
@@ -84,12 +84,12 @@ models = [
 
 methods = [
     'full_finetuning',
-    'lora_1',
+    # 'lora_1',
     'lora_2',
     'lora_4',
     'lora_8',
-    'lora_16',
-    'lora_32',
+    # 'lora_16',
+    # 'lora_32',
     # 'lora_64',
     # 'lora_128',
     # 'lora_256',

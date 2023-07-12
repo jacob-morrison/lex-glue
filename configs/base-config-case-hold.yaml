@@ -11,7 +11,7 @@ tasks:
       - name: GITHUB_REPO
         value: jacob-morrison/lex-glue
       - name: GIT_REF
-        value: 9d78ba8da92eef146533ead4eb758216020a8055
+        value: 1deb667b24519d69c4acf775093ace18305dec43
       - name: PYTHON_VERSION
         value: "3.9"
       - name: PIP_REQUIREMENTS_FILE
