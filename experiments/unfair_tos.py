@@ -247,6 +247,7 @@ def main():
         use_fast=model_args.use_fast_tokenizer,
         revision=model_args.model_revision,
         use_auth_token=True if model_args.use_auth_token else None,
+        device_map = 'auto',
     )
     if 'gpt2' in model_args.model_name_or_path or 'llama' in model_args.model_name_or_path:
         tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
